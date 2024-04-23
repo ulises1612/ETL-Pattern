@@ -15,6 +15,7 @@ from src.controller.dashboard_controller import DashboardController
 import dash_bootstrap_components as dbc
 import plotly.express as px
 from dash import dcc, html
+from dash.dependencies import Output, Input
 
 class Dashboard:
 
@@ -30,7 +31,7 @@ class Dashboard:
                 html.Div(html.Hr()),
                 self._header_subtitle("Sales summary financial report"),
                 html.Br(),
-                self._highlights_cards(),
+                self._highlights_cards_2(),
                 html.Br(),
                 html.Div(
                     [
@@ -127,7 +128,7 @@ class Dashboard:
             [
                 dbc.CardBody(
                     [
-                        html.H2(value, className="card-title"),
+                        html.H2(value, className="card-title", id=f'{label.lower()}-value'),
                     ]
                 ),
                 dbc.CardFooter(label),
@@ -142,6 +143,66 @@ class Dashboard:
         sales = DashboardController.load_sales()
         return html.Div(
             [
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            self._card_value("Products", products["products"])
+                        ),
+                        dbc.Col(
+                            self._card_value("Orders", orders["orders"])
+                        ),
+                        dbc.Col(
+                            self._card_value("Providers", providers["providers"])
+                        ),
+                        dbc.Col(
+                            self._card_value("Locations", locations["locations"])
+                        ),
+                        dbc.Col(
+                            self._card_value("Sales", "$ {:,.2f}".format(float(sales['sales'])))
+                        ),
+                    ]
+                ),
+            ]
+        )
+    
+    def _range_date_picker(self, id, start_date, end_date):
+        return dbc.Form(
+            [
+                dbc.Label("Start Date"),
+                dcc.DatePickerRange(
+                    id='start-date',
+                    start_date='2024-04-01',
+                    end_date='2024-04-02',
+                    display_format='YYYY-MM-DD'
+                ),
+            ]
+        )
+    
+    # TODO: Refactorizar el código en una nueva función
+    def _highlights_cards_2(self):
+        products = DashboardController.load_products()
+        orders = DashboardController.load_orders()
+        providers = DashboardController.load_providers()
+        locations = DashboardController.load_locations()
+        sales = DashboardController.load_sales()
+        return html.Div(
+            [
+                dbc.Row(
+                    [
+                        dbc.Form(
+                            [
+                                dbc.Label("Start Date"),
+                                dcc.DatePickerRange(
+                                    id='start-date',
+                                    start_date='2024-04-01',
+                                    end_date='2024-04-02',
+                                    display_format='YYYY-MM-DD'
+                                ),
+                            ]
+                        ),
+                        
+                    ]  
+                ),
                 dbc.Row(
                     [
                         dbc.Col(

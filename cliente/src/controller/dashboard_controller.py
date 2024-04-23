@@ -29,6 +29,36 @@ class DashboardController:
         return {
             "products": json_response["data"]["response"][0]["count"]
         }
+    
+    @staticmethod
+    def load_products_by_period(start_date, end_date):
+        response = Repository.get_products_by_period(start_date, end_date)
+        if response.status_code != 200:
+            return {"products": 0}
+        
+        json_response = json.loads(response.text)
+
+        assert('data' in json_response.keys())
+        assert('response' in json_response['data'].keys())
+
+        return {
+            "products": json_response["data"]["response"][0]["count"]
+        }
+        
+    @staticmethod
+    def load_providers_by_period(start_date, end_date):
+        response = Repository.get_providers_by_period(start_date, end_date)
+        if response.status_code != 200:
+            return {"providers": 0}
+        
+        json_response = json.loads(response.text)
+
+        assert('data' in json_response.keys())
+        assert('response' in json_response['data'].keys())
+
+        return {
+            "providers": json_response["data"]["response"][0]["count"]
+        }
 
     @staticmethod
     def load_providers():
@@ -89,6 +119,38 @@ class DashboardController:
         return {
             "sales": json_response["data"]["response"][0]["total"]
         }
+        
+    @staticmethod
+    def load_sales_by_period(start_date, end_date):
+        response = Repository.get_sales_by_period(start_date, end_date)
+        if response.status_code != 200:
+            return {"sales": 0}
+        
+        json_response = json.loads(response.text)
+
+        assert('data' in json_response.keys())
+        assert('response' in json_response['data'].keys())
+
+        value = json_response["data"]["response"][0]["total"]
+        
+        return {
+            "sales": value if value else 0
+        }
+        
+    @staticmethod
+    def load_orders_by_period(start_date, end_date):
+        response = Repository.get_orders_by_period(start_date, end_date)
+        if response.status_code != 200:
+            return {"orders": 0}
+        
+        json_response = json.loads(response.text)
+
+        assert('data' in json_response.keys())
+        assert('response' in json_response['data'].keys())
+
+        return {
+            "orders": json_response["data"]["response"][0]["count"]
+        }
 
     @staticmethod
     def load_providers_per_location():
@@ -135,7 +197,7 @@ class DashboardController:
             total = 0
             for sold in entry["providers"]:
                 for order in sold["sold"]:
-                    total += (int(order["quantity"]) * float(order["quantity"]))
+                    total += (int(order["quantity"]) * float(order["price"]))
             result["sales"].append(total)
             
         return result

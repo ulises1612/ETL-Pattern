@@ -22,6 +22,21 @@ class Queries:
                 }
             }
         """
+        
+    @staticmethod
+    def get_products_by_period(start_date, end_date):
+        query = '''
+            {
+  var(func: has(invoice)) @filter(ge(date, "'''+start_date+'''") AND le(date, "'''+end_date+'''")) {
+    prod as ~bought
+  }
+    
+    response(func: uid(prod)) {
+    count: count(uid)
+  }
+  }
+        '''
+        return query
 
     @staticmethod
     def get_total_providers():
@@ -32,6 +47,23 @@ class Queries:
                 }
             }
         """
+        
+    @staticmethod
+    def get_providers_by_period(start_date, end_date):
+        query = '''
+            {
+                var(func: has(invoice)) @filter(ge(date, "'''+start_date+'''") AND le(date, "'''+end_date+'''")) {
+                    ~bought {
+                            prov as sold
+                    }
+                }
+                
+                response(func: uid(prov)) {
+                    count: count(uid)
+                }
+            }
+        '''
+        return query
 
     @staticmethod
     def get_total_locations():
@@ -52,6 +84,18 @@ class Queries:
                 }
             }
         """
+    
+    # Added
+    @staticmethod
+    def get_orders_by_period(start_date, end_date):
+        query = '''
+            {
+                response(func: has(invoice))  @filter(ge(date, "'''+start_date+'''") AND le(date, "'''+end_date+'''")) {
+                    count(uid)
+                }
+            }
+        '''
+        return query
 
     @staticmethod
     def get_total_sales():
@@ -66,7 +110,22 @@ class Queries:
                 }
             }
         """
+        
+    @staticmethod
+    def get_sales_by_period(start_date, end_date):
+        query = '''
+            {
+                var(func: has(invoice)) @filter(ge(date, "'''+start_date+'''") AND le(date, "'''+end_date+'''")) {
+                    t as total
+                }
 
+                response() {
+                    total: sum(val(t))
+                }
+            }
+        '''
+        return query
+    
     @staticmethod
     def get_providers_per_location():
         return """

@@ -20,10 +20,20 @@ class Repository:
     def get_products():
         response = Provider.execute(Queries.get_total_products())
         return response
+    
+    @staticmethod
+    def get_products_by_period(start_date, end_date):
+        response = Provider.execute(Queries.get_products_by_period(start_date, end_date))
+        return response
 
     @staticmethod
     def get_providers():
         response = Provider.execute(Queries.get_total_providers())
+        return response
+    
+    @staticmethod
+    def get_providers_by_period(start_date, end_date):
+        response = Provider.execute(Queries.get_providers_by_period(start_date, end_date))
         return response
 
     @staticmethod
@@ -35,10 +45,21 @@ class Repository:
     def get_orders():
         response = Provider.execute(Queries.get_total_orders())
         return response
+    
 
     @staticmethod
     def get_sales():
         response = Provider.execute(Queries.get_total_sales())
+        return response
+    
+    @staticmethod
+    def get_sales_by_period(start_date, end_date):
+        response = Provider.execute(Queries.get_sales_by_period(start_date, end_date))
+        return response
+    
+    @staticmethod
+    def get_orders_by_period(start_date, end_date):
+        response = Provider.execute(Queries.get_orders_by_period(start_date, end_date))
         return response
 
     @staticmethod
