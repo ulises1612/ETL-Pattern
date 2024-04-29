@@ -201,6 +201,38 @@ class DashboardController:
             result["sales"].append(total)
             
         return result
+    
+    """
+    Metodo que carga las ventas por sucursal en un periodo de tiempo
+    """
+    @staticmethod
+    def load_sales_per_location_by_period(start_date, end_date):
+        response = Repository.get_sales_by_location_by_period(start_date, end_date)
+        if response.status_code != 200:
+            return {
+                "sales": [],
+                "location": []
+            }
+        result = {
+            "sales": [],
+            "location": []
+        }
+        json_response = json.loads(response.text)
+        assert('data' in json_response.keys())
+        if json_response['data'] is not None:
+            assert('response' in json_response['data'].keys())
+        else:
+            print("No data returned from query")
+            return []
+        for entry in json_response["data"]["response"]:
+            result["location"].append(entry["name"])
+            total = 0
+            for sold in entry["providers"]:
+                for order in sold["sold"]:
+                    total += (int(order["quantity"]) * float(order["quantity"]))
+            result["sales"].append(total)
+            
+        return result    
 
     @staticmethod
     def load_orders_per_location():

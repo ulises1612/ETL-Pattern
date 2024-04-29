@@ -16,6 +16,7 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 from dash import dcc, html
 from dash.dependencies import Output, Input
+from datetime import datetime
 
 class Dashboard:
 
@@ -51,7 +52,7 @@ class Dashboard:
                         dbc.Row(
                             [
                                 dbc.Col(
-                                    self._bar_chart_sales_per_location(),
+                                    self._highlights_cards_4(),
                                     width=12
                                 ),
                             ]
@@ -241,15 +242,55 @@ class Dashboard:
                 ),
             ]
         )
+    
+    def _highlights_cards_4(self):
+        start_date = '2024-04-01'
+        end_date = datetime.now().strftime('%Y-%m-%d')
+        sales_locations = DashboardController.load_sales_per_location_by_period(start_date, end_date)
+        locations = DashboardController.load_locations()
+        sales = DashboardController.load_sales()
+        ##id = 'start-date-2'
+        
+        ##date_picker = self._range_date_picker(id, start_date, end_date)
+        bar_chart_sales_per_location = self._bar_chart_sales_per_location(start_date=start_date, end_date=end_date)
+        return html.Div(
+            [
+                dbc.Row(
+                    [
+                        
+                        bar_chart_sales_per_location,
+                        ##date_picker,
+                    ]
+                ),
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            self._card_value("Sucursales", locations["locations"])
+                        ),
+                        dbc.Col(
+                            self._card_value("Ventas", "$ {:,.2f}".format(float(sales['sales'])))
+                        ),
+                        dbc.Col(
+                            self._card_value("total-sales", " {:,.2f}".format(sum(sales_locations['sales'])))
+                        ),
+                    ]
+                ),
 
-    def _bar_chart_sales_per_location(self):
-        data = DashboardController.load_sales_per_location()
+            ]
+        )
+    
+
+    def _bar_chart_sales_per_location(self, start_date, end_date):
+        data = DashboardController.load_sales_per_location_by_period(start_date, end_date)
+        id = 'start-date-2'
+        date_picker = self._range_date_picker(id, start_date, end_date)
         bar_char_fig = px.bar(data, x="location", y="sales")
         return dbc.Card(
             [
                 dbc.CardBody(
                     [
                         html.H3("Sales per location", className="card-title"),
+                        date_picker,
                         dcc.Graph(
                             id='sales-per-location',
                             figure=bar_char_fig

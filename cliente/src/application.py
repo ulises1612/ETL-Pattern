@@ -16,6 +16,7 @@ from src.view.dashboard import Dashboard
 import dash_bootstrap_components as dbc
 import dash
 from dash.dependencies import Output, Input
+import plotly.express as px
 
 app = dash.Dash(
     external_stylesheets=[dbc.themes.LUX],
@@ -67,6 +68,18 @@ def update_sales_from_date_range(start_date, end_date):
         return 'No data'
     sales = DashboardController.load_sales_by_period(start_date, end_date)
     return f'$ {sales["sales"]:.2f}'
+
+@app.callback(
+    Output('sales-per-location-value', 'figure'),
+    Input('start-date-2', 'start_date'),
+    Input('start-date-2', 'end_date')
+)
+def update_sales_per_location_from_date_range(start_date, end_date):
+    if start_date is None or end_date is None:
+        return 'No data'
+    sales = DashboardController.load_sales_per_location_by_period(start_date, end_date)
+    bar_char_fig = px.bar(sales, x="location", y="sales")
+    return bar_char_fig
 
 app.title = "ETL"
 
