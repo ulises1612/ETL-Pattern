@@ -71,6 +71,11 @@ class Repository:
     def get_sales_by_location():
         response = Provider.execute(Queries.get_sales_per_location())
         return response
+    
+    @staticmethod
+    def get_sales_by_location_by_period(start_date, end_date):
+        response = Provider.execute(Queries.get_sales_per_location_by_period(start_date, end_date))
+        return response
 
     @staticmethod
     def get_orders_by_location():
