@@ -3,8 +3,8 @@
 #-------------------------------------------------------------------------
 # Archivo: loader.py
 # Capitulo: Flujo de Datos
-# Autor(es): Perla Velasco & Yonathan Mtz. & Jorge Solís
-# Version: 1.0.0 Noviembre 2022
+# Autor(es): Perla Velasco & Yonathan Mtz. & Jorge Solís, modificado por Omar Luna
+# Version: 1.0.1 Abril 2024
 # Descripción:
 #
 #   Este archivo define el punto de ejecución del Microservicio
@@ -13,6 +13,7 @@
 from src.transformers.csv_transformer import CSVTransformer
 from src.transformers.xml_transformer import XMLTransformer
 from src.transformers.htm_transformer import HTMTransformer
+from src.transformers.txt_transformer import TXTTransformer
 from src.helpers.provider import Provider
 from src.helpers.queries import Queries
 from src.helpers.processor import Processor
@@ -22,7 +23,7 @@ import luigi, json, time
 class Loader(luigi.Task):
 
     def requires(self):
-        return CSVTransformer(), XMLTransformer(), HTMTransformer()
+        return CSVTransformer(), XMLTransformer(), HTMTransformer(), TXTTransformer()
 
     def run(self):
         # creates the schema
