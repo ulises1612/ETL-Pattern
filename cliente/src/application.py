@@ -81,6 +81,31 @@ def update_sales_per_location_from_date_range(start_date, end_date):
     bar_char_fig = px.bar(sales, x="location", y="sales")
     return bar_char_fig
 
+
+@app.callback(
+    Output('most_selled', 'children'),
+    Input('start-date', 'start_date'),
+    Input('start-date', 'end_date')
+)
+def update_most_selled_products_from_date_range(start_date, end_date):
+    if start_date is None or end_date is None:
+        return 'No data'
+    most_selled = DashboardController.load_most_selled_products_by_period(start_date, end_date)
+    return [
+        html.Div(
+            [
+                dbc.Row(
+                    [
+                        html.H5(f"-{product['product']} [{product['times']} time(s) sold]", style={"font-weight":"bold"}),
+                    ]
+                ),
+            ]
+        )
+        for product in most_selled
+    ]
+
+
+
 app.title = "ETL"
 
 dashboard = Dashboard()

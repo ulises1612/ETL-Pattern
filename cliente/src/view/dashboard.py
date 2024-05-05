@@ -95,7 +95,7 @@ class Dashboard:
                         dbc.Row(
                             [
                                 dbc.Col(
-                                    self._panel_most_selled_products(),
+                                    self._panel_most_selled_products_2(),
                                     width=12
                                 ),
                             ]
@@ -406,6 +406,41 @@ class Dashboard:
                                         for product in most_selled
                                     ]
                                 )
+                            ]
+                        )
+                    ]
+                )
+            ]
+        )
+        
+        
+
+    def _panel_most_selled_products_2(self):
+        return html.Div(
+            [   
+                dbc.Row(
+                    [
+                        dbc.Form(
+                            [
+                                dbc.Label("Start Date"),
+                                dcc.DatePickerRange(
+                                    id='start-date',
+                                    start_date='2024-02-06',
+                                    end_date='2024-02-08',
+                                    display_format='YYYY-MM-DD'
+                                ),
+                            ]
+                        ),
+                        
+                    ]  
+                ),
+                dbc.Card(
+                    [
+                        dbc.CardBody(
+                            [
+                                html.H3("Most selled", className="card-title"),
+                                html.Br(),
+                                html.Div(id="most_selled")
                             ]
                         )
                     ]

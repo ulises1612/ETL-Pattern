@@ -312,3 +312,27 @@ class DashboardController:
                 "times": product["times"]
             })
         return result
+
+    
+    """
+        Metodo que carga los productos mas vendidos en un periodo de tiempo
+    """
+    @staticmethod
+    def load_most_selled_products_by_period(start_date,end_date):
+        response = Repository.get_most_selled_products_by_period(start_date,end_date)
+        if response.status_code != 200:
+            return []
+        
+        result = []
+        json_response = json.loads(response.text)
+        
+        assert('data' in json_response.keys())
+        assert('response' in json_response['data'].keys())
+        
+        for product in json_response["data"]["response"][0:5]:
+            result.append({
+                "product": product["description"],
+                "times": product["times"]
+            })
+            
+        return result
